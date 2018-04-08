@@ -1,0 +1,6 @@
+# This file overrides the default options in pkg-watch;
+# Move this file to pkg-watch.conf to be loaded by pkg-watch
+
+# How frequently we should expire yum cache
+# Default: 180 (minutes)
+yum_expire_cache=180

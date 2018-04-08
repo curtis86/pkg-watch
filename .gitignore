@@ -1,0 +1,5 @@
+config/contacts
+config/packages
+config/pkg-watch.conf
+.state
+pkg-watch.log

@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+# pkg-watch: watches yum packages, and sends email notification when an update is available
+# Author: Curtis K <email>
+# Github: https://github.com/curtis86/pkg-watch
+
+set -u
+
+# Vars/dirs:
+readonly home_dir="$( cd "$( dirname $0 )" && pwd )"
+readonly config_dir="${home_dir}/config"
+readonly includes_dir="${home_dir}/includes"
+readonly state_dir="${home_dir}/.state"
+readonly package_metadata_dir="${state_dir}/packages"
+readonly yum_metadata_dir="${state_dir}/yum"
+
+# Vars/files:
+readonly functions_file="${includes_dir}/functions.sh"
+readonly config_file="${config_dir}/pkg-watch.conf"
+readonly log_file="${home_dir}/pkg-watch.log"
+readonly contacts_file="${config_dir}/contacts"
+readonly packages_file="${config_dir}/packages"
+readonly yum_last_cache_expire_file="${yum_metadata_dir}/yum_last_cache_expire"
+
+# Vars/other:
+readonly script_dependencies=( "yum" "mail" )
+readonly progname="$( basename $0 )"
+yum_expire_cache=180
+
+# Includes:
+source "${functions_file}"
+[ -f "${config_file}" ] && [ $( wc -c "${config_file}" | awk '{ print $1 }' ) -gt 0 ] && source "${config_file}"
+
+main() {
+  pw::check_dependencies
+  pw::setup
+
+  declare -a PACKAGES
+
+  pw::test_config
+
+  # Check arg count
+  [ $# -lt 1 ] && pw::usage && exit
+  option_count=$#
+
+  # Parse options... the old way...
+  while [ $# -gt 0 ]; do
+
+    set +u
+    _opt="$1" ; shift
+    _optarg="$1" ; shift
+    set -u
+
+    if [ ${option_count} -eq 1 ]; then
+      case "${_opt}" in
+        update) pw::update ;;
+        *) echo "Unknown option: $_opt" && pw::usage ;;
+    esac
+    fi
+
+    if [ ${option_count} -ge 2 ]; then
+      case "${_opt}" in
+        pkg-info) pw::package_info "${_optarg}" ;;
+        *) echo "Unknown option: $_opt" && pw::usage ;;
+      esac
+    fi
+  done
+
+  echo "Done."
+}; main $@
