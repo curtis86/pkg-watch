@@ -35,7 +35,7 @@ git clone https://github.com/curtis86/pkg-watch
 
 3) Schedule `pkg-watch update` to run as a cronjob at your preferred interval (I run mine every 60 minutes), ie:
 
-`* */1 * * * $USER $PKG_WATCH_PATH`
+`0 * * * * $USER $PKG_WATCH_PATH`
 
 > Please set `$USER` to the actual user that you want **pkg-watch** to run as, and set `$PKG_WATCH_PATH` to your actual full path of **pkg-watch**
 
