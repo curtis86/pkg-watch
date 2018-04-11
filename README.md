@@ -4,13 +4,12 @@
 
 Want to get an email notification when an important yum update is available?
 
-**pkg-watch** monitors a defined list of yum packages, and then sends an email notification when a monitored package update  is available.
+**pkg-watch** monitors a defined list of yum packages, and then sends an email notification when a monitored package update is available.
 
 ## B. Dependencies
 
  * yum-based OS (ie. RHEL or CentOS)
  * mail
-
 
 ## C. Supported Systems
 

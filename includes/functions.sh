@@ -35,6 +35,11 @@ f() {
   fi
 }
 
+# Log to file
+log() {
+  set -u && echo "$( date ) - $@" >> "${log_file}"
+}
+
 # Sets up directories and files
 pw::setup() {
   [ ! -d "${state_dir}" ] && mkdir "${state_dir}"
@@ -155,6 +160,7 @@ pw::update() {
  local new_updates=1
 
   echo "Updating package data for ${#PACKAGES[@]} packages."
+  echo
 
   local last_cache_refresh=$( cat "${yum_last_cache_expire_file}" )
 
@@ -206,11 +212,13 @@ pw::update() {
       local this_package_last_version="$( cat "${this_package_last_version_file}" )"
       echo " * Got last checked version ${this_package_last_version}"
 
+      # If current yum version doesn't match our last known version, assume an update is available
       if [ "${this_package_current_version}" != "${this_package_last_version}" ]; then
         new_updates=0
-        echo " * Package update detected. Adding package to updates file."
+        echo " * Package update detected. Adding package to updates file!"
         set -u && echo "${this_package_current_version}" > "${this_package_last_version_file}"
         set -u && echo "${package},${this_package_current_version}" >> "${new_updates_file}"
+        log "Update available for ${package} (${this_package_last_version} -> ${this_package_current_version})"
       else
         echo " * No package version change detected."
       fi
@@ -246,7 +254,7 @@ ${_new_update_data}"
         done
       fi
   else
-    ee "unable to read contacts file, ${contacts_file}. Not sending notification."
+    we "unable to read contacts file, ${contacts_file}. Not sending notification."
   fi
   echo
 
