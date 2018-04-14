@@ -54,7 +54,7 @@ openssh-clients
 
 ## Notes
 
-**pkg-watch** can run as an unprivileged user! I always recommend PoLP (principle of least privilege) wherever possible, so please run this as an unprivleged user.
+**pkg-watch** can run as an unprivileged user! I always recommend PoLP (principle of least privilege) wherever possible, so please run this as an unprivileged user.
 
 **pkg-watch** lets you define your own yum metadata cache expiry - please be mindful in setting to something considerate of your local yum mirror.
 
