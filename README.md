@@ -38,7 +38,19 @@ git clone https://github.com/curtis86/pkg-watch
 
 > Please set `$USER` to the actual user that you want **pkg-watch** to run as, and set `$PKG_WATCH_PATH` to your actual full path of **pkg-watch**
 
-4) The default yum cache refresh timeout can be overridden - please see `config/pkg-watch.conf-custom`
+4) The default yum cache refresh timeout can be overridden - please see `config/pkg-watch.conf-sample`
+
+An example of some important packages to monitor can be:
+
+```
+kernel
+httpd
+mod_ssl
+openssl
+openssh-server
+openssh-clients
+```
+
 
 ## Notes
 
