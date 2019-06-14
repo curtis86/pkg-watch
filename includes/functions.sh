@@ -144,14 +144,16 @@ pw::package_info() {
   [ $# -ne ${e_args} ] && pw::usage && exit 1
 
   local _package="$1"
-  local _package_version="$( yum list all ${_package} 2>/dev/null | sed 1d | awk '{ print $2 }' | sort -n | tail -1 )"
 
-  if [ -n "${_package_version}" ]; then
-    echo
-    echo "The latest version of ${_package} is: ${_package_version}"
-  else
-    echo "Unable to find version info for package ${_package}." >&2
-    exit 1
+  export _package_version;
+  if package_version="$( yum list all ${_package} 2>/dev/null | sed 1d | awk '{ print $2 }' | sort -n | tail -1 )" ; then
+    if [ -n "${_package_version}" ]; then
+      echo
+      echo "The latest version of ${_package} is: ${_package_version}"
+    else
+      echo "Unable to find version info for package ${_package}." >&2
+      exit 1
+    fi
   fi
 }
 
@@ -192,10 +194,11 @@ pw::update() {
     echo "[${package}]"
     local this_package_dir="${package_metadata_dir}/${package}"
     local this_package_last_version_file="${this_package_dir}/last_version"
-    local this_package_current_version="$( yum list all "${package}" | sed 1d | awk '{ print $2 }' | sort -n | tail -1 )"
 
-    if [ $? -ne 0 ] || [ -z "${this_package_current_version}" ]; then
-      we "Got non-zero exit code, or empty string for package ${package}. This could mean the package is not found, misspelled or contains a bad character. This package will be skipped for the rest of this run."
+    export this_package_current_version;
+
+    if ! this_package_current_version="$( yum list all "${package}" 2>&1 | sed 1d | awk '{ print $2 }' | sort -n | tail -1 )" ; then
+      we "Got non-zero exit code, or empty string for package ${package}. This could mean the package is not found, misspelled, contains a bad character or your yum mirror and/or network maybe be temporarily unreachable. This package will be skipped for the rest of this run."
       echo
       continue
     fi

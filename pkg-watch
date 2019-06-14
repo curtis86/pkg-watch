@@ -5,6 +5,7 @@
 # Github: https://github.com/curtis86/pkg-watch
 
 set -u
+set -o pipefail
 
 # Vars/dirs:
 readonly home_dir="$( cd "$( dirname $0 )" && pwd )"
