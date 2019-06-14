@@ -146,7 +146,7 @@ pw::package_info() {
   local _package="$1"
 
   export _package_version;
-  if package_version="$( yum list all ${_package} 2>/dev/null | sed 1d | awk '{ print $2 }' | sort -n | tail -1 )" ; then
+  if _package_version="$( yum list all ${_package} 2>/dev/null | sed 1d | awk '{ print $2 }' | sort -n | tail -1 )" ; then
     if [ -n "${_package_version}" ]; then
       echo
       echo "The latest version of ${_package} is: ${_package_version}"
